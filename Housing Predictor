@@ -1,0 +1,325 @@
+
+from matplotlib_venn import venn3, venn3_circles
+from matplotlib import pyplot as plt
+
+#data: sqft, rooms, parking, price
+housingData = [[2000, 5, 1, 2804500],
+ [2000, 4, 1, 2803600],
+ [2000, 3, 1, 2802700],
+ [2000, 2, 1, 2801800],
+ [2000, 1, 1, 2800900],
+ [3000, 5, 1, 3704500],
+ [3000, 4, 1, 3703600],
+ [3000, 3, 1, 3702700],
+ [3000, 2, 1, 3701800],
+ [3000, 1, 1, 3700900],
+ [4000, 5, 1, 4604500],
+ [4000, 4, 1, 4603600],
+ [4000, 3, 1, 4602700],
+ [4000, 2, 1, 4601800],
+ [4000, 1, 1, 4600900],
+ [2000, 5, 0, 1804500],
+ [2000, 4, 0, 1803600],
+ [2000, 3, 0, 1802700],
+ [2000, 2, 0, 1801800],
+ [2000, 1, 0, 1800900],
+ [3000, 5, 0, 2704500],
+ [3000, 4, 0, 2703600],
+ [3000, 3, 0, 2702700],
+ [3000, 2, 0, 2701800],
+ [3000, 1, 0, 2700900],
+ [4000, 5, 0, 3604500],
+ [4000, 4, 0, 3603600],
+ [4000, 3, 0, 3602700],
+ [4000, 2, 0, 3601800],
+ [4000, 1, 0, 3600900],
+ [1000, 5, 1, 1904500],
+ [1000, 4, 1, 1903600],
+ [1000, 3, 1, 1902700],
+ [1000, 2, 1, 1901800],
+ [1000, 1, 1, 1900900],
+ [1000, 5, 0, 904500],
+ [1000, 4, 0, 903600],
+ [1000, 3, 0, 902700],
+ [1000, 2, 0, 901800],
+ [1000, 1, 0, 900900]]
+
+#declare an array that stores all the bitstreams depending on the housing properties
+houseBitList = []
+
+#determines bitstreams depending on housing properties
+def bitDetermination():
+    #Use the following sets, A={ >2000 sqft}, B={>2 rooms}, C={has parking}.
+    for i in range(len(housingData)):
+        if housingData[i][0] > 2000:
+            if housingData[i][1] > 2:
+                if housingData[i][2] > 0:
+                  houseBitList.append('111')
+
+        if housingData[i][0] > 2000:
+            if housingData[i][1] > 2:
+                if housingData[i][2] == 0:
+                  houseBitList.append('110')
+
+        if housingData[i][0] > 2000:
+            if housingData[i][1] <= 2:
+                if housingData[i][2] > 0:
+                  houseBitList.append('101')
+
+        if housingData[i][0] > 2000:
+            if housingData[i][1] <= 2:
+                if housingData[i][2] == 0:
+                  houseBitList.append('100')
+
+        if housingData[i][0] <= 2000:
+            if housingData[i][1] > 2:
+                if housingData[i][2] > 0:
+                  houseBitList.append('011')
+
+        if housingData[i][0] <= 2000:
+            if housingData[i][1] > 2:
+                if housingData[i][2] == 0:
+                  houseBitList.append('010')
+
+        if housingData[i][0] <= 2000:
+            if housingData[i][1] <= 2:
+                if housingData[i][2] > 0:
+                  houseBitList.append('001')
+
+        if housingData[i][0] <= 2000:
+            if housingData[i][1] <= 2:
+                if housingData[i][2] == 0:
+                  houseBitList.append('000')
+
+#run the method
+bitDetermination()
+
+#print the solution
+# print(houseBitList)
+
+#declare arrays that hold all of the prices for the houses depending on the bitstream
+prices100 = []
+prices010 = []
+prices001 = []
+prices110 = []
+prices101 = []
+prices011 = []
+prices111 = []
+prices000 = []
+
+#arranges prices depending on bitstream of each house
+def arrangePrices ():
+    for i in range(len(houseBitList)):
+        if houseBitList[i] == '111':
+            prices111.append(housingData[i][3])
+        if houseBitList[i] == '110':
+            prices110.append(housingData[i][3])
+        if houseBitList[i] == '101':
+            prices101.append(housingData[i][3])
+        if houseBitList[i] == '100':
+            prices100.append(housingData[i][3])
+        if houseBitList[i] == '011':
+            prices011.append(housingData[i][3])
+        if houseBitList[i] == '010':
+            prices010.append(housingData[i][3])
+        if houseBitList[i] == '001':
+            prices001.append(housingData[i][3])
+        if houseBitList[i] == '000':
+            prices000.append(housingData[i][3])
+
+arrangePrices()
+
+#calculate average prices for each array
+avgPrice100 = sum(prices100)/len(prices100)
+avgPrice010 = sum(prices010)/len(prices010)
+avgPrice001 = sum(prices001)/len(prices001)
+avgPrice110 = sum(prices110)/len(prices110)
+avgPrice101 = sum(prices101)/len(prices101)
+avgPrice011 = sum(prices011)/len(prices011)
+avgPrice111 = sum(prices111)/len(prices111)
+avgPrice000 = sum(prices000)/len(prices000)
+
+# print(avgPrice100)
+# print(avgPrice010)
+# print(avgPrice001)
+# print(avgPrice110)
+# print(avgPrice101)
+# print(avgPrice011)
+# print(avgPrice111)
+# print(avgPrice000)
+
+
+#set size and labels
+plt.figure(figsize=(14,9))
+v = venn3(subsets = (30,30,30,20,20,20,20), set_labels = ('A:>2000 sqft', 'B:>2 rooms', 'C:has parking'))
+
+#create an array for the bit list and the text that will go into each corresponding section
+bitList = ['100','010','001','110','101','011','111','000']
+# vennText = ['a, b, c','d, e, f','g, h, j','k, m, n','p, q, r','s, t, u','v, w, x']
+
+#add text at (x, y)
+plt.text(-0.72, 0.64, f"U={len(housingData)}", fontsize=12) # Universe
+plt.text(0.4,-0.5, f"${avgPrice000:,.0f}")  # 000/h
+
+# Add circles with specified line style and width
+venn3_circles(subsets = (30,30,30,20,20,20,20), linestyle = 'solid', linewidth = 2)
+
+
+#ask for user house
+
+def promptUser():
+ userPrice = input("Input your new house price: ")
+ userPrice = int(userPrice)
+ print("Price: ", userPrice)
+ userSpace = input("Input your new house square footage: ")
+ userSpace = int(userSpace)
+ print("Sqft: ", userSpace)
+ userRooms = input("Input your number of  rooms: ")
+ userRooms = int(userRooms)
+ print("# of Rooms: ", userRooms)
+ userParking = input("Input your parking availability (0 for none, 1 for has): ")
+ userParking = int(userParking)
+ print(userParking)
+ return userPrice, userSpace, userRooms, userParking
+
+
+#saves bitstream of user's home
+userBit = 0
+
+#determine the bitstream the user's house has based on properties
+def determineUserBitStream(userSpace, userRooms, userParking):
+    global userBit # Declare userBit as global
+    if userSpace > 2000:
+        if userRooms > 2:
+            if userParking > 0:
+                userBit = '111'
+
+    if userSpace > 2000:
+        if userRooms > 2:
+            if userParking == 0:
+                userBit = '110'
+
+    if userSpace > 2000:
+        if userRooms <= 2:
+            if userParking > 0:
+                userBit = '101'
+
+    if userSpace > 2000:
+        if userRooms <= 2:
+            if userParking == 0:
+                userBit = '100'
+    if userSpace <= 2000:
+        if userRooms > 2:
+            if userParking > 0:
+                userBit = '011'
+
+    if userSpace <= 2000:
+        if userRooms > 2:
+            if userParking == 0:
+                userBit = '010'
+
+    if userSpace <= 2000:
+        if userRooms <= 2:
+            if userParking > 0:
+                userBit = '001'
+    if userSpace <= 2000:
+        if userRooms <= 2:
+            if userParking == 0:
+                userBit = '000'
+    print("Bitstream: ", userBit)
+
+
+#check if house of user is a deal or no deal depending on it being over or under the avg price
+def dealOrNoDeal(userPrice):
+  if userBit == '111':
+    if userPrice < avgPrice111:
+      print("Deal")
+    else:
+      print("No Deal")
+  if userBit == '110':
+    if userPrice < avgPrice110:
+      print("Deal")
+    else:
+      print("No Deal")
+  if userBit == '101':
+    if userPrice < avgPrice101:
+      print("Deal")
+    else:
+      print("No Deal")
+  if userBit == '100':
+    if userPrice < avgPrice100:
+      print("Deal")
+    else:
+      print("No Deal")
+  if userBit == '011':
+    if userPrice < avgPrice011:
+      print("Deal")
+    else:
+      print("No Deal")
+  if userBit == '010':
+    if userPrice < avgPrice010:
+      print("Deal")
+    else:
+      print("No Deal")
+  if userBit == '001':
+    if userPrice < avgPrice001:
+      print("Deal")
+    else:
+      print("No Deal")
+  if userBit == '000':
+    if userPrice < avgPrice000:
+      print("Deal")
+    else:
+      print("No Deal")
+
+#create an answer used as a boolean
+answer = "yes";
+
+# loop the deal or no deal as many times as the user likes
+while True:
+    # ask for house details
+    userPrice, userSpace, userRooms, userParking = promptUser()
+    determineUserBitStream(userSpace, userRooms, userParking)
+    dealOrNoDeal(userPrice)
+
+    # ask if the user wants to continue
+    answer = input("Do you want to add in another house? ('yes' or 'no'): ").strip().lower()
+    if answer != "yes":
+        print("Goodbye")
+        break
+
+
+
+#set location of text according to bitstream using the arrays
+# v.get_label_by_id(bitList[0]).set_text(vennText[0])
+# v.get_label_by_id(bitList[1]).set_text(vennText[1])
+# v.get_label_by_id(bitList[2]).set_text(vennText[2])
+# v.get_label_by_id(bitList[3]).set_text(vennText[3])
+# v.get_label_by_id(bitList[4]).set_text(vennText[4])
+# v.get_label_by_id(bitList[5]).set_text(vennText[5])
+# v.get_label_by_id(bitList[6]).set_text(vennText[6])
+
+#change the middle section color to white
+v.get_patch_by_id('111').set_color('white')
+
+#make the bg gray and outline it
+plt.gca().set_facecolor('lightgray')
+plt.gca().set_axis_on()
+
+#create title and show
+plt.title('Average Housing Prices Based on Sqft, # of Rooms, and Parking Availability')
+
+
+
+#set location of text according to bitstream using the arrays
+v.get_label_by_id(bitList[0]).set_text(f"${avgPrice100:,.0f}")
+v.get_label_by_id(bitList[1]).set_text(f"${avgPrice010:,.0f}")
+v.get_label_by_id(bitList[2]).set_text(f"${avgPrice001:,.0f}")
+v.get_label_by_id(bitList[3]).set_text(f"${avgPrice110:,.0f}")
+v.get_label_by_id(bitList[4]).set_text(f"${avgPrice101:,.0f}")
+v.get_label_by_id(bitList[5]).set_text(f"${avgPrice011:,.0f}")
+v.get_label_by_id(bitList[6]).set_text(f"${avgPrice111:,.0f}")
+
+plt.show();
+
+#other factors: location; HOA; amenities; school district; neighbors; proximity to freeway; transit accessibility
